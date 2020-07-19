@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css"/> 
+    <script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+    <script>
+        jQuery(function($){
+            $("#foo-table").DataTable({
+            	// 표시 건수기능 숨기기
+            	lengthChange: true,
+            	// 검색 기능 숨기기
+            	searching: false,
+            	// 정렬 기능 숨기기
+            	ordering: false,
+            	// 정보 표시 숨기기
+            	info: false,
+            	// 페이징 기능 숨기기
+            	paging: true
+            });
+        });
+    </script>
+    <title></title>
+</head>
+<body th:fragment="boardList">
+    <table id="foo-table" class="table table-bordered">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>제목</th>
+				<th>작성날짜</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr th:each="board : ${result.boardList}">
+				<td th:text="${board.id}"></td>
+				<td th:text="${board.title}"></td>
+				<td th:text="${#temporals.format(board.createDate, 'yyyy-MM-dd')}"></td>
+			</tr>
+		</tbody>
+    </table>
+    <div th:text="${result.totalCount}"></div>
+    <div th:text="${result.totalPageCount}"></div>
+</body>
+</html>

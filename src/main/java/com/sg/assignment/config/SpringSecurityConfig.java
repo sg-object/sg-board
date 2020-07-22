@@ -23,8 +23,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		// TODO Auto-generated method stub
-		web.ignoring().antMatchers("/resources/**", "/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
-				"/configuration/**", "/swagger-ui.html", "/webjars/**", "/console/**", "/images/**");
+		web.ignoring().antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources/**",
+				"/configuration/**", "/swagger-ui.html", "/webjars/**", "/console/**", "/images/**", "/js/**", "/css/**");
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class UserController {
 	@GetMapping("/")
 	public ModelAndView login(HttpSession session, @RequestParam(value = "error", required = false) String error) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/login");
+		mav.setViewName("login");
 		mav.addObject("apiURL", naverService.getLoginApiUrl(session));
 		if (error != null) {
 			mav.addObject("errorMessage", "로그인에 실패 했습니다.\n아이디와 비밀번호를 확인해주세요.");

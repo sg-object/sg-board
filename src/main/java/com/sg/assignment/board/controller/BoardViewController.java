@@ -26,7 +26,7 @@ public class BoardViewController {
 	@GetMapping
 	public ModelAndView list(BoardCondition boardCondition, Authentication authentication) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/board/list/list");
+		mav.setViewName("board/list/list");
 		mav.addObject("types", SearchType.values());
 		mav.addObject("loginId", authentication.getPrincipal().toString());
 		return mav;
@@ -35,7 +35,7 @@ public class BoardViewController {
 	@GetMapping("/{id}")
 	public ModelAndView detail(@PathVariable long id, Authentication authentication) {
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("/board/detail/detail");
+		mav.setViewName("board/detail/detail");
 		mav.addObject("siteKey", siteKey);
 		mav.addObject("loginId", authentication.getPrincipal().toString());
 		if (id > 0) {

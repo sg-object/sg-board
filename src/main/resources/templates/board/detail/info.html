@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<script type="text/javascript">
+	var action = false;
+	
+	function deleteBoard(id){
+		if(action){
+			return
+		}else{
+			action = true
+		}
+		var result = confirm("해당 게시물을 삭제하시겠습니까?");
+		if(result){
+			$.ajax({
+				type: "DELETE",
+				contentType: "application/json; UTF-8",
+				url: "/api/boards/" + id,
+				success: function() {
+					alert("게시물이 삭제되었습니다.");
+					goListPage();
+				},
+				error: function(res) {
+					alert(res.responseJSON.message);
+				}
+			})
+		}
+		action = false
+	}
+	
+	function goUpdatePage(id){
+		location.href = "/boards/" + id + "/update";
+	}
+	
+	function goListPage(){
+		location.href = "/boards";
+	}
+</script>
+</head>
+<body style="padding: 10px 100px">
+	<h1>게시판 상세</h1>
+	<div style="display: flex; flex-direction: column;">
+		<div class="column">제목</div>
+		<div class="value" th:text="${data.title}"></div>
+		<div class="column">내용</div>
+		<div style="word-break: break-all;" th:utext="${data.content}"></div>
+		<div class="column">작성자</div>
+		<div class="value" th:text="${data.userId}"></div>
+		<div class="column">작성날짜</div>
+		<div class="value" th:text="${#temporals.format(data.createDate, 'yyyy-MM-dd HH:mm')}"></div>
+		<div style="display: flex; justify-content: space-between; flex-direction: row; margin-top: 20px">
+			<button th:if="${data.userId.toString().equals(loginId.toString())}" class="button" style="background-color: #FF0000" th:onclick="|javascript:deleteBoard(${data.id});|">삭제</button>
+			<div style="display: flex; width: 100%; justify-content: flex-end;">
+				<button class="button" style="color: black;" onclick="javascript:goListPage();">목록</button>
+				<button th:if="${data.userId.toString().equals(loginId.toString())}" class="button" style="background-color: #0066FF" th:onclick="|javascript:goUpdatePage(${data.id});|">수정</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

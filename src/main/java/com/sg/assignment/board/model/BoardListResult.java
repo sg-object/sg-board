@@ -6,11 +6,11 @@ import lombok.Data;
 @Data
 public class BoardListResult {
 
-	private List<Board> boardList;
+	private List<Board> data;
 
-	private long totalCount;
+	private long recordsTotal;
 
-	private int totalPageCount;
+	private long recordsFiltered;
 
 	private int page;
 

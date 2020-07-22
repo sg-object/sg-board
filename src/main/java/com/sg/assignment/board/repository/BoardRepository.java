@@ -9,7 +9,9 @@ import com.sg.assignment.board.model.Board;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-	public Page<Board> findAllByTitleContaining(String title, Pageable pageable);
+	public Page<Board> findAllByDeleteYn(boolean deleteYn, Pageable pageable);
 
-	public Page<Board> findAllByUserIdContaining(String userId, Pageable pageable);
+	public Page<Board> findAllByDeleteYnAndTitleContaining(boolean deleteYn, String title, Pageable pageable);
+
+	public Page<Board> findAllByDeleteYnAndUserIdContaining(boolean deleteYn, String userId, Pageable pageable);
 }

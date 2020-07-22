@@ -5,8 +5,8 @@ spring:  h2:    console:      enabled: true
     username: sa
     password:
     initialization-mode: always
-    data:    - classpath:data.sql
+    #data:    #- classpath:data.sql
   jpa:
     hibernate:      ddl-auto: create-drop    show-sql: true
     properties:      hibernate:
-        format_sql: true
+        format_sql: false  thymeleaf:    prefix: classpath:templates/    suffix: .html    cache: true    check-template-location: truegoogle:  recaptcha:    siteverify-url: https://www.google.com/recaptcha/api/siteverify    site-key: 6Ldjm7MZAAAAAHlk0bRd-fOcmrzNBTobDCNu_Zlb    secret-key: 6Ldjm7MZAAAAAG9XaTyb5Kvbdt7QK0apVFlBpjmH    naver:  login:    client-id: cSRUUkHUeBP4q5HJB5cw    client-secret: UTUxqhxAiy    callback-url: http://localhost:8080/naver/callback

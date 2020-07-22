@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko" xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<title>로그인</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script type="text/javascript">
+function getData(){
+	return {
+		id: document.getElementById("id").value,
+		password: document.getElementById("password").value,
+		name: document.getElementById("name").value
+	}
+}
+
+function checkData(data){
+	if(data.id.trim().length < 1){
+		alert("아이디 값이 공백으로만 설정되어 있습니다.");
+		return false;
+	}
+	if(data.password.trim().length < 1){
+		alert("비밀번호 값이 공백으로만 설정되어 있습니다.");
+		return false;
+	}
+	if(data.name.trim().length < 1){
+		alert("이름 값이 공백으로만 설정되어 있습니다.");
+		return false;
+	}
+	var regexp = /^[A-Za-z0-9]*$/;
+	if(!regexp.test(data.id) || !regexp.test(data.password)){
+		alert("아이디와 비밀번호는 영문 대소문자와 숫자로만 입력 가능합니다.");
+		return false;
+	}
+	return true;
+}
+
+var action = false;
+
+function join(){
+	if(action){
+		return
+	}else{
+		action = true
+	}
+	var data = getData();
+	if(!checkData(data)){
+		action = false
+		return
+	}
+	var result = confirm("회원가입을 하시겠습니까?");
+	if(result){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json; UTF-8",
+			data: JSON.stringify(data),
+			url: "/join",
+			success: function() {
+				alert("회원가입이 완료되었습니다.");
+				goLoginPage();
+			},
+			error: function(res) {
+				alert(res.responseJSON.message);
+			}
+		})
+	}
+	action = false
+}
+
+function goLoginPage() {
+	location.href = "/";
+}
+</script>
+<style type="text/css">
+.section {
+	display: flex;
+	flex-direction: column;
+	margin: 10px;
+}
+.label {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+.input {
+	height: 30px;
+	font-size: 15px;
+	width: 200px;
+}
+.btn {
+	height: 40px;
+	width: 200px;
+	background-color: white;
+	border-width: thin;
+	border-radius: 4px;
+	font-weight: bold;
+	font-size: 16px;
+	margin-top: 10px;
+}
+</style>
+</head>
+<body>
+	<div style="display: flex;justify-content: center;">
+		<div style="display: flex;align-items: center;flex-direction: column;">
+			<h1>회원가입</h1>
+			<div class="section">
+				<span class="label">아이디</span>
+				<input type="text" id="id" class="input" placeholder="아이디" autocomplete="off" maxlength="20"/>
+			</div>
+			<div class="section">
+				<span class="label">비밀번호</span>
+				<input type="password" id="password" class="input" placeholder="비밀번호" autocomplete="off" maxlength="20"/>
+			</div>
+			<div class="section">
+				<span class="label">이름</span>
+				<input type="text" id="name" class="input" placeholder="이름" autocomplete="off" maxlength="10"/>
+			</div>
+			<button type="button" class="btn" onclick="javascript:join();">회원가입</button>
+			<button type="button" class="btn" onclick="javascript:goLoginPage();">취소</button>
+		</div>
+	</div>
+</body>
+</html>

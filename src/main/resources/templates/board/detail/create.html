@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script th:src="@{/js/summernote/summernote-lite.min.js}"></script>
+<script th:src="@{/js/summernote/lang/summernote-ko-KR.min.js}"></script>
+
+<link rel="stylesheet" th:href="@{/css/summernote/summernote-lite.css}">
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css" />
+
+<script src='https://www.google.com/recaptcha/api.js'></script>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	$('#summernote').summernote({
+		  height: 300,
+		  minHeight: null,
+		  maxHeight: null,
+		  focus: false,
+		  lang: "ko-KR",
+		  toolbar: [
+			  ['style', ['bold', 'italic', 'underline', 'clear']],
+			  ['font', ['strikethrough', 'superscript', 'subscript']],
+			  ['fontsize', ['fontsize']],
+			  ['color', ['color']],
+			  ['para', ['ul', 'ol', 'paragraph']],
+			  ['height', ['height']]
+		  ]
+	});
+});
+
+function getData(token){
+	return {
+		title: document.getElementById("title").value,
+		content: $('#summernote').summernote('code'),
+		recaptchaResponse: token
+	}
+}
+
+function checkGrecaptcha(){
+	var token = grecaptcha.getResponse()
+	if(token == ''){
+		alert("reCAPTCHA 체크 해주세요.");
+	}
+	return token;
+}
+
+function checkData(data){
+	if(data.title.trim().length < 1){
+		alert("유효하지 않은 제목입니다.");
+		return false;
+	}
+	if(data.content.trim().length < 1){
+		alert("유효하지 않은 내용입니다.");
+		return false;
+	}
+	return true;
+}
+
+
+var action = false;
+
+function createBoard(){
+	if(action){
+		return
+	}else{
+		action = true
+	}
+	var token = checkGrecaptcha();
+	var data = getData(token);
+	if(token == '' || !checkData(data)){
+		action = false
+		return
+	}
+	var result = confirm("해당 게시물을 등록하시겠습니까?");
+	if(result){
+		$.ajax({
+			type: "POST",
+			contentType: "application/json; UTF-8",
+			data: JSON.stringify(data),
+			url: "/api/boards",
+			success: function(id) {
+				alert("게시물이 등록되었습니다.");
+				goDetailPage(id);
+			},
+			error: function(res) {
+				alert(res.responseJSON.message);
+			}
+		})
+	}
+	action = false
+}
+
+function updateBoard(id){
+	if(action){
+		return
+	}else{
+		action = true
+	}
+	var token = checkGrecaptcha();
+	var data = getData(token);
+	if(token == '' || !checkData(data)){
+		action = false
+		return
+	}
+	var result = confirm("해당 게시물을 수정하시겠습니까?");
+	if(result){
+		$.ajax({
+			type: "PUT",
+			contentType: "application/json; UTF-8",
+			data: JSON.stringify(data),
+			url: "/api/boards/" + id,
+			success: function() {
+				alert("게시물이 수정되었습니다.");
+				goDetailPage(id);
+			},
+			error: function(res) {
+				alert(res.responseJSON.message);
+			}
+		})
+	}
+	action = false
+}
+
+function goDetailPage(id) {
+	location.href = "/boards/" + id;
+}
+
+</script>
+</head>
+<body style="padding: 10px 100px">
+	<h1>게시판
+		<th:block th:text="${pageType.toString().equals('create')} ? '(등록)' : '(수정)'"></th:block>
+	</h1>
+	<div class="column">제목</div>
+	<input type="text" id="title" th:value="${data != null} ? ${data.title} : ''" class="form-control condition-height" maxlength="50">
+	<div class="column">내용</div>
+	<div id="summernote">
+		<th:block th:utext="${data != null} ? ${data.content} : ''"></th:block>
+	</div>
+	<div style="display: flex; justify-content: flex-end; flex-direction: row; margin-top: 20px">
+		<button class="button" style="color: black;" onclick="javascript:window.history.back();">취소</button>
+		<th:block th:if="${pageType.toString().equals('create')}">
+			<button class="button" style="background-color: #0066FF" onclick="javascript:createBoard();">저장</button>
+		</th:block>
+		<th:block th:if="${pageType.toString().equals('update')}">
+			<button th:if="${data.userId.toString().equals(loginId.toString())}" class="button" style="background-color: #0066FF" th:onclick="|javascript:updateBoard(${data.id});|">수정</button>
+		</th:block>
+	</div>
+	<div class="g-recaptcha" style="display: flex; justify-content: flex-end;" th:data-sitekey="${siteKey}"></div>
+</body>
+</html>

@@ -9,4 +9,10 @@ public interface BoardService {
 	public BoardListResult getBoardList(BoardCondition boardCondition);
 
 	public Board getBoard(long id);
+
+	public void createBoard(Board board);
+
+	public void updateBoard(Board board);
+
+	public void deleteBoard(long id, String loginId);
 }

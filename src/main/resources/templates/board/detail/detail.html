@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout/layout">
-<th:block layout:fragment="content">
-	<script type="text/javascript">
-		
-	</script>
-	<div>
-		test
-	</div>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block th:fragment="content">
+<head>
+<meta charset="UTF-8">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<style type="text/css">
+.column {
+	font-weight: bold;
+	font-size: 25px;
+	margin-top: 20px;
+}
+
+.value {
+	font-size: 15px;
+}
+
+.border {
+	border: 1px ridge;
+}
+
+.button {
+	width: 50px;
+	height: 40px;
+	border: 0px;
+	border-radius: 5px;
+	font-weight: bold;
+	color: white;
+	margin: 10px;
+}
+</style>
+</head>
+<body>
+	<th:block th:if="${!pageType.toString().equals('info')}" th:include="board/detail/create"></th:block>
+	<th:block th:if="${pageType.toString().equals('info')}"	th:include="board/detail/info"></th:block>
+</body>
 </html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<script type="text/javascript">
+function logout(){
+	var result = confirm("로그아웃 하시겠습니까?");
+	if(result){
+		location.href = "/logout"
+	}
+}
+</script>
+<div style="display: flex;justify-content: flex-end;">
+	<span style="display: flex;align-items: center;font-weight: bold;margin-right: 10px">
+		<span th:text="${loginId}" style="margin-right: 5px"></span>
+		<span>님</span>
+	</span>
+	<button type="button" onclick="javascript:logout();">로그아웃</button>
+</div>
+<div layout:fragment="content"></div>
+</html>

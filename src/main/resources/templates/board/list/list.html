@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorator="layout/layout">
+<th:block th:fragment="content">
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.css" />
+
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		setDataTable('', '');
+	});
+
+	function setDataTable(type, keyword) {
+		$("#boardTable").DataTable(
+				{
+					serverSide : true,
+					destroy : true,
+					filter : false,
+					lengthChange : true,
+					searching : false,
+					ordering : false,
+					info : true,
+					paging : true,
+					ajax : {
+						url : "/api/boards?type=" + type + "&keyword="
+								+ keyword,
+						type : "GET",
+						dataType : "json"
+					},
+					columns : [
+							{
+								title : "ID",
+								data : "id",
+								width : "10%"
+							},
+							{
+								title : "제목",
+								data : "title",
+								render : function(data, type, row) {
+									return "<a href=\"javascript:goDetailPage("
+											+ row.id + ");\">" + data + "</a>";
+								}
+							}, {
+								title : "작성자",
+								data : "userId",
+								width : "20%"
+							}, {
+								title : "작성일",
+								data : "createDate",
+								width : "20%"
+							} ]
+				});
+	}
+
+	function searchKeyword() {
+		var keyword = document.getElementById("keyword").value;
+		if (keyword.length > 0 && keyword.trim().length < 1) {
+			alert("검색어는 띄어쓰기로만 설정할수 없습니다.");
+			return;
+		}
+		var type = document.getElementById("type").value;
+		setDataTable(type, keyword);
+	}
+
+	function goDetailPage(id) {
+		location.href = "/boards/" + id;
+	}
+</script>
+<style type="text/css">
+.condition-height {
+	height: 40px;
+}
+</style>
+</head>
+<body style="padding: 30px 50px">
+	<h1>게시판</h1>
+	<div style="display: flex; justify-content: flex-end;">
+		<button class="condition-height" style="width: 60px;" onclick="javascript:goDetailPage(0);">글쓰기</button>
+	</div>
+	<table id="boardTable" class="table table-bordered"></table>
+	<div style="display: flex; flex-direction: row; justify-content: center; margin-top: 30px;">
+	<select id="type" class="browser-default custom-select condition-height" style="width: 80px">
+		<th:block th:each="type : ${types}">
+			<option th:value="${type}">
+				<th:block th:text="${type.name}">
+			</option>
+		</th:block>
+	</select>
+	<input type="text" id="keyword" class="form-control condition-height" style="width: 50%; margin: 0px 20px;">
+	<button class="condition-height" style="width: 60px" onclick="javascript:searchKeyword();">검색</button>
+	</div>
+</body>
+</html>
